@@ -1,0 +1,2 @@
+git remote add origin https://github.com/user/repo.gitAutistic-Cookie/autistic-cupcake.git
+git remote set-url origin https://github.com/Autistic-Cookie/autistic-cupcake.git
