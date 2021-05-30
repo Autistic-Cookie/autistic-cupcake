@@ -2641,7 +2641,7 @@ u_lol CKECK_B = 0;
 	lmvcp.IS_TK=1;\
 	vecMoves.push_back(lmvcp);
 assert_kings();
-//#define mkmvstrct(from,to,pro,ist)
+
 #define markd(md) /*dbgt64[toRegularTable[(md)]]++;*/ \
 	cnt++;
 #define whl_esq(esq) while(ulp[esq]==0)
@@ -2654,180 +2654,116 @@ assert_kings();
 	if constexpr (CLR_ATT == WHITE) {
 	pawn_mov = &WHITE_PAWN_MOVE[0];
 	pawn_att = &WHITE_PAWN_ATTACK[0];
-	//pawnVrank = '2';
-	//pawnPrank = '7';
-	//finRank   = '8';
-	//lpiecesl = wlpieces;
-
 	}
 	else {
 	pawn_mov = &BLACK_PAWN_MOVE[0];
 	pawn_att = &BLACK_PAWN_ATTACK[0];
-	//pawnVrank = '7';
-	//pawnPrank = '2';
-	//finRank   = '1';
-	//lpiecesl = blpieces;
-
 	}
 	if constexpr(statAnalysis){cout << "blockers bits:";}
 	u_lol usb=0,thb=0,usk_thb=0,thk_usb=0;
 	u_lol thr_PLUS_SLID = them_ARR[ROOK] | them_ARR[QUEEN];
-	 u_lol thr_XRAY_SLID = them_ARR[BISHOP] | them_ARR[QUEEN];
-	 u_lol us_PLUS_SLID = us_ARR[ROOK] | us_ARR[QUEEN];
-	 u_lol us_XRAY_SLID = us_ARR[BISHOP] | us_ARR[QUEEN];
-	 //auto [us_ksr, us_ksb] = kingRSafety(ourk, us, us);
-	 //auto [th_ksr, th_ksb] = kingRSafety(thrk, them, them);
-			 u_lol rr = ROOK_RAYS[63 - thrk];
-			 u_lol rp = (rr & them)|(1ull<<thrk);
-			 rp *= mics_r13[thrk];
-			 rp >>= 51;
-			 u_lol th_ksr = rr & ROOK_MASKS_BLCKS[thrk][rp];
+        u_lol thr_XRAY_SLID = them_ARR[BISHOP] | them_ARR[QUEEN];
+        u_lol us_PLUS_SLID = us_ARR[ROOK] | us_ARR[QUEEN];
+        u_lol us_XRAY_SLID = us_ARR[BISHOP] | us_ARR[QUEEN];
 
-			  rr = BISHOP_RAYS[63-thrk];
-			  rp = (rr & them)|(1ull<<thrk);
-			 rp *= magics_b_12[thrk];
-			 rp >>= 52;
-			 u_lol th_ksb = BISHOP_MASKS_BLCKS[thrk][rp];
+        u_lol rr = ROOK_RAYS[63 - thrk];
+        u_lol rp = (rr & them)|(1ull<<thrk);
+        rp *= mics_r13[thrk];
+        rp >>= 51;
+        u_lol th_ksr = rr & ROOK_MASKS_BLCKS[thrk][rp];
 
-			 if(2){}
-	 //u_lol us_ks = us_ksr | us_ksb;
-	 u_lol us_ks = attMaskStar(ourk,us);
-	 u_lol us_kgrd = us_ks & us;
-	 u_lol th_ks = th_ksr | th_ksb;
-	 u_lol th_kgrd = th_ks & them;
-			 if(2){}
-	 u_lol thr_PLUS_SLID_POT_THRT=thr_PLUS_SLID&ROOK_RAYS[63-ourk];
-	 //dbgptr_ull(thr_PLUS_SLID_POT_THRT);
-	 if(thr_PLUS_SLID_POT_THRT){
-		 //auto th_plat = king_PLUS_Safety(ourk, thr_PLUS_SLID);
-		 u_lol rr = ROOK_RAYS[63 - ourk];
-		 u_lol rp = (rr & thr_PLUS_SLID)|(1ull<<ourk);
-		 rp *= mics_r13[ourk];
-		 rp >>= 51;
-		 u_lol th_plat = rr & ROOK_MASKS_BLCKS[ourk][rp];
-				if(2){}
-		 th_plat&=thr_PLUS_SLID;
-		 while(th_plat){
-			 char x = msb(th_plat);
-			 //cout << "x" << x << "\n";
-			 th_plat ^=1ull <<x;
-			 u_lol lrayp= CORD[x][ourk];
-			 //cout <<"PLUS sliders";
+        rr = BISHOP_RAYS[63-thrk];
+        rp = (rr & them)|(1ull<<thrk);
+        rp *= magics_b_12[thrk];
+        rp >>= 52;
+        u_lol th_ksb = BISHOP_MASKS_BLCKS[thrk][rp];
 
-			 //dbgptr_ull(thr_PLUS_SLID| thr_XRAY_SLID);
-			 //cout << "PLUS attackers";
-			 //dbgptr_ull(th_plat);
-			 //cout << "PLUS ray";
-			 //dbgptr_ull(lray);
-			 u_lol lray =lrayp& all_pcs;
-			 if(!(lray & (lray-1))){
-				 if(lray&us_kgrd)usb|=lray;
-				 //BLCK_RAY.push_back(lrayp|1ull <<x);
-				 //BLCK_RAY.push_back(1ull <<x);
+        u_lol us_ks = attMaskStar(ourk,us);
+        u_lol us_kgrd = us_ks & us;
+        u_lol th_ks = th_ksr | th_ksb;
+        u_lol th_kgrd = th_ks & them;
+        u_lol thr_PLUS_SLID_POT_THRT=thr_PLUS_SLID&ROOK_RAYS[63-ourk];
 
-				 //printt();
-				 //dbgptr_ull(usb|1ull<<ourk|1ull<<x);
-				 //else usb |= lray;<----------------
-			 }}
-	 }
-	 u_lol thr_XRAY_SLID_POT_THRT=thr_XRAY_SLID&BISHOP_RAYS[63-ourk];
-	 if(thr_XRAY_SLID_POT_THRT){
-		 //auto  th_xrat = king_XRAY_Safety(ourk, thr_XRAY_SLID);
-				if(2){}
-				u_lol rr = BISHOP_RAYS[63-ourk];
-				u_lol rp = (rr & thr_XRAY_SLID)|(1ull<<ourk);
-				rp *= magics_b_12[ourk];
-				rp >>= 52;
-				u_lol th_xrat = BISHOP_MASKS_BLCKS[ourk][rp];
+        if(thr_PLUS_SLID_POT_THRT){
+            u_lol rr = ROOK_RAYS[63 - ourk];
+            u_lol rp = (rr & thr_PLUS_SLID)|(1ull<<ourk);
+            rp *= mics_r13[ourk];
+            rp >>= 51;
+            u_lol th_plat = rr & ROOK_MASKS_BLCKS[ourk][rp];
+            th_plat&=thr_PLUS_SLID;
+            while(th_plat){
+                char x = msb(th_plat);
+                th_plat ^=1ull <<x;
+                u_lol lrayp= CORD[x][ourk];
+                u_lol lray =lrayp& all_pcs;
+                if(!(lray & (lray-1))){
+                    if(lray&us_kgrd)
+                        usb|=lray;
+                }
+            }
+        }
 
-				th_xrat &= thr_XRAY_SLID;
-		 while(th_xrat){
-			 int x = msb(th_xrat);
-			 //dbgptr_ull(th_xrat);
+        u_lol thr_XRAY_SLID_POT_THRT=thr_XRAY_SLID&BISHOP_RAYS[63-ourk];
+        if(thr_XRAY_SLID_POT_THRT){
+            u_lol rr = BISHOP_RAYS[63-ourk];
+            u_lol rp = (rr & thr_XRAY_SLID)|(1ull<<ourk);
+            rp *= magics_b_12[ourk];
+            rp >>= 52;
+            u_lol th_xrat = BISHOP_MASKS_BLCKS[ourk][rp];
 
-			 //dbgptr_ull(th_xrat);
-			 th_xrat ^=1ull <<x;
-			 u_lol lrayp= CORD[x][ourk];
-			 //cout <<"XRAY slid";
-			 //printt();
-			 //dbgptr_ull(thr_PLUS_SLID | thr_XRAY_SLID);
+            th_xrat &= thr_XRAY_SLID;
+            while(th_xrat){
+                int x = msb(th_xrat);
+                th_xrat ^=1ull <<x;
+                u_lol lrayp= CORD[x][ourk];
+                u_lol lray =lrayp& all_pcs;
+                if(!(lray & (lray-1))){
+                    if(lray&us_kgrd)
+                        usb|=lray;
+                }
+            }
+        }
 
-			 //cout << "PLUS attackers";
-			 //dbgptr_ull(th_xrat);
-			 //cout << "PLUS ray";
-			 //dbgptr_ull(lray);
-			u_lol lray =lrayp& all_pcs;
+        u_lol us_PLUS_SLID_POT_THRT=us_PLUS_SLID&ROOK_RAYS[63-thrk];
+        if(us_PLUS_SLID_POT_THRT){
+            u_lol rr = ROOK_RAYS[63 - thrk];
+            u_lol rp = (rr & us_PLUS_SLID) |(1ull<<thrk);
+            rp *= mics_r13[thrk];
+            rp >>= 51;
+            auto us_plat=rr & ROOK_MASKS_BLCKS[thrk][rp];
+            us_plat &= us_PLUS_SLID;
+            while(us_plat){
+                int x = msb(us_plat);
+                us_plat ^=1ull <<x;
+                u_lol lrayp= CORD[x][thrk];
+                u_lol lray =lrayp& all_pcs;
+                if(!(lray & (lray-1))){
+                    if(lray&th_kgrd)thb|=lray;
+                    else thk_usb |= lray;
+                }
+            }
+        }
+        u_lol us_XRAY_SLID_POT_THRT=us_XRAY_SLID&BISHOP_RAYS[63-thrk];
 
-			 if(!(lray & (lray-1))){
-				 if(lray&us_kgrd)usb|=lray;
-				 //BLCK_RAY.push_back(lrayp|1ull <<x);
-				 //printt();
-				 //dbgptr_ull(usb|1ull<<ourk|1ull<<x);
-				 //else usb |= lray;<----------------
-			 }}
-	 }
-
-	 u_lol us_PLUS_SLID_POT_THRT=us_PLUS_SLID&ROOK_RAYS[63-thrk];
-	 if(us_PLUS_SLID_POT_THRT){
-		 //auto us_plat = king_PLUS_Safety(thrk, us_PLUS_SLID);
-		 u_lol rr = ROOK_RAYS[63 - thrk];
-		 u_lol rp = (rr & us_PLUS_SLID) |(1ull<<thrk);
-		 rp *= mics_r13[thrk];
-		 rp >>= 51;
-		 auto us_plat=rr & ROOK_MASKS_BLCKS[thrk][rp];
-
-				 if(2){}
-				 us_plat &= us_PLUS_SLID;
-		 while(us_plat){
-			 int x = msb(us_plat);
-			 us_plat ^=1ull <<x;
-			 u_lol lrayp= CORD[x][thrk];
-			 //dbgptr_ull(lray);
-			 u_lol lray =lrayp& all_pcs;
-			 if(!(lray & (lray-1))){
-				 if(lray&th_kgrd)thb|=lray;
-				 else thk_usb |= lray;
-				 //BLCK_RAY.push_back(lrayp|1ull <<thrk|1ull <<x);
-				 //printt();
-				 //dbgptr_ull(thb|thk_usb|1ull<<thrk|1ull<<x);
-			 }}
-	 }
-	 u_lol us_XRAY_SLID_POT_THRT=us_XRAY_SLID&BISHOP_RAYS[63-thrk];
-
-	 if(us_XRAY_SLID_POT_THRT){
-		 //auto  us_xrat = king_XRAY_Safety(thrk, us_XRAY_SLID);
-
-				 u_lol rr = BISHOP_RAYS[63-thrk];
-				 u_lol rp = (rr & us_XRAY_SLID)|(1ull<<thrk);
-				 rp *= magics_b_12[thrk];
-				 rp >>= 52;
-				 u_lol us_xrat = BISHOP_MASKS_BLCKS[thrk][rp];
-				 us_xrat &= us_XRAY_SLID;
-				 //dbgptr_ull(us_xrat);
-		 while(us_xrat){
-			 int x = msb(us_xrat);
-			 us_xrat ^=1ull <<x;
-			 u_lol lrayp= CORD[x][thrk];
-			 //cout << "xray\n";
-			 //printt();
-			 //dbgptr_ull(lray);
-			 u_lol lray =lrayp& all_pcs;
-			 if(!(lray & (lray-1))){
-				 if(lray&th_kgrd)thb|=lray;
-				 else thk_usb |= lray;
-				 //BLCK_RAY.push_back(lrayp|1ull <<thrk|1ull <<x);
-				 //printt();
-				 //dbgptr_ull(thb|thk_usb|1ull<<thrk|1ull<<x);
-			 }}
-	 }
-	 u_lol all_bl = usb  | thk_usb;
-	 /*if (il) {
-		 cout << "Blockers :\n";
-		 printt();
-		 dbgptr_ull(il);
-	 }*/
-	 //dbgptr_ull(thk_usb);
-	 //dbgptr_ull(all_bl);
+        if(us_XRAY_SLID_POT_THRT){
+            u_lol rr = BISHOP_RAYS[63-thrk];
+            u_lol rp = (rr & us_XRAY_SLID)|(1ull<<thrk);
+            rp *= magics_b_12[thrk];
+            rp >>= 52;
+            u_lol us_xrat = BISHOP_MASKS_BLCKS[thrk][rp];
+            us_xrat &= us_XRAY_SLID;
+            while(us_xrat){
+                int x = msb(us_xrat);
+                us_xrat ^=1ull <<x;
+                u_lol lrayp= CORD[x][thrk];
+                u_lol lray =lrayp& all_pcs;
+                if(!(lray & (lray-1))){
+                    if(lray&th_kgrd)thb|=lray;
+                    else thk_usb |= lray;
+                }
+            }
+        }
+        u_lol all_bl = usb  | thk_usb;
 
 assert_kings();
 	//moveCPiece lanp=lmvcp;
@@ -2862,7 +2798,7 @@ if constexpr(statAnalysis){cout << "en passant:";}
 	u_lol p;
 assert_kings();
 lmvcp.sig=V_PAWN;
-//####################################################### pawns
+//####################################################### <promotion>
 u_lol px=us_ARR[V_PAWN];
 auto Promotions = [&](){
 	lmvcp.sig = PROM;lmvcp.PROM = QUEEN;push_movp(p, tx);cnt++;lmvcp.PROM = ROOK;push_movp(p, tx);cnt++;lmvcp.PROM = KNIGHT;push_movp(p, tx);cnt++;lmvcp.PROM = BISHOP;push_movp(p, tx);cnt++;lmvcp.PROM=0;lmvcp.sig =  V_PAWN;
@@ -2871,263 +2807,182 @@ auto Promotions_a=[&](auto tx_){lmvcp.sig = PROM;lmvcp.PROM = QUEEN;push_mov_a(p
 	lmvcp.PROM = ROOK;push_mov_a(p, tx_);cnt++;lmvcp.PROM = KNIGHT;push_mov_a(p, tx_);cnt++;
 	lmvcp.PROM = BISHOP;push_mov_a(p, tx_);cnt++;lmvcp.PROM=0;lmvcp.sig = V_PAWN;
 };
+
 //######################################################## <pawn bit logic>
-
-//lmvcp.ANP_AV=1;
-//p_2mov=0;
-/*dbgptr_ull(p_latt);
-dbgptr_ull(p_ratt);
-dbgptr_ull(p_1mov);
-dbgptr_ull(p_2mov);*/
-int lcc=0,llc=popcnt(p_2mov);
-/*
-//if(depth>0 && ~isch)
-while(p_2mov){
-	//printt();
-	//dbgptr_ull(p_2mov);
-
-	int a=lsb(p_2mov);
-	p_2mov^=1ull<<a;
-	p=toBigTable[63-a];
-	if (bits1[p] & all_bl || isch)
-	 {lmvcp.ANP_AV=1;cnt++;lcc++; push_movp(p, p+pawn_mov[1]);lmvcp.ANP_AV=0;}
-	else{
-		bool lisch=false;
-		if(PAWN_ATT[a+PAWN_MOV_1]&them_ARR[V_PAWN]){lcc++;lmvcp.ANP_AV=1;{cnt++; push_movp(p, p+pawn_mov[1]);}lmvcp.ANP_AV=0;}
-		else {
-			lcc++;
-			dpthcntr[depth]++;
-			if(depth>0){
-			moveTablePce_L<CLR_ATT>(V_PAWN, p, p+pawn_mov[1]);
-			if(PAWN_ATT[a+PAWN_MOV_2]&(1ull<<thrk))//lisch=true;
-			{lisch=true;check_MASK.push_back(1ull<<(a+PAWN_MOV_2));}
-
-
-			moves<CLR_P, CLR_ATT>(lmvcp, depth, lisch);lisch = false;
-			if(depth==PERFT_DEPTH  )divide(p,p+pawn_mov[1]);
-			moveTablePce_L<CLR_ATT>(V_PAWN, p+pawn_mov[1], p);
-			}
-		}
-	}
-}//else dpthcntr[depth]+=popcnt(p_2mov & (~all_bl));
-//p_2mov=0;
-lmvcp.ANP_AV=0;
-
-while(p_1mov){
-	int a=lsb(p_1mov);
-	p_1mov^=1ull<<a;
-	p=toBigTable[63-a];
-	tx=p+pawn_mov[0];
-	if (bits1[p] & all_bl || isch){
-		if ((1ull<<a)&P_RANK) {Promotions();}  else { push_movp(p, tx); cnt++;}
-	}else //{
-		if ((1ull<<a)&P_RANK) {Promotions();}  else {
-			bool lisch=false;
-			dpthcntr[depth]++;
-			if (depth > 0){
-				moveTablePce_L<CLR_ATT>(V_PAWN, p, tx);
-				if(PAWN_ATT[a+PAWN_MOV_1]&(1ull<<thrk))//lisch=true;
-				{lisch=true;check_MASK.push_back(1ull<<(a+PAWN_MOV_1));}
-				psh++;
-				moves<CLR_P, CLR_ATT>(lmvcp, depth, lisch);lisch = false;
-				if(depth==PERFT_DEPTH  )divide(p,tx);
-				moveTablePce_L<CLR_ATT>(V_PAWN, tx, p);
-			}
-		}
-}*/
-/*while(p_ratt){
-	int a=lsb(p_ratt);
-	p_ratt^=1ull<<a;
-	p=toBigTable[63-a];
-	tx=p+pawn_att[0];
-	if (bits1[p] & all_bl || isch){Promotions_a(tx);}else {cnt++;  push_mov_a(p, tx); }
-
-}*/
-
-
-//if(lcc!=llc)cout<<"!";
-//######################################################## </pawn bit logic>
 if constexpr(statAnalysis){cout << "pawn logic:";}
+//int lcc=0,llc=popcnt(p_2mov);
 
-	while(px){
-	int a=lsb(px);
-	u_lol mbit=1ull<<a;
-	px^=mbit;
-	p=toBigTable[63^a];
-		//for (; p != 0; ) {
-	if (bits1[p] & all_bl || isch){
-//----------------------------------------------------------------------- move
-	tx=p + PAWN_MOV_10;tx1=p + pawn_mov[1];
-	if (p_1mov &mbit) {
-				if (mbit&P_RANK) {
-					Promotions();
-			}  else { push_movp(p, tx); markd(tx)}
-	}
-//---------------------------------------------------------------------- 2 move
-	if (p_2mov&mbit){lmvcp.ANP_AV=1; markd(tx1); push_movp(p, tx1); lmvcp.ANP_AV=0;};
+while(px){
+    int a=lsb(px);
+    u_lol mbit=1ull<<a;
+    px^=mbit;
+    p=toBigTable[63^a];
+    if (bits1[p] & all_bl || isch){
+        //----------------------------------------------------------------------- move
+        tx=p + PAWN_MOV_10;tx1=p + pawn_mov[1];
+        if (p_1mov &mbit) {
+            if (mbit&P_RANK) {
+                Promotions();
+            }  else { push_movp(p, tx); markd(tx)}
+        }
+        //---------------------------------------------------------------------- 2 move
+        if (p_2mov&mbit){lmvcp.ANP_AV=1; markd(tx1); push_movp(p, tx1); lmvcp.ANP_AV=0;};
 
-	//_____________________________________________________________________ attack
-	tx=p + pawn_att[0];tx1=p + pawn_att[1];
-	if(mbit & p_ratt) {
-		if (mbit&P_RANK) {Promotions_a(tx);}else {markd(tx);  push_mov_a(p, tx); }}
-	if(mbit & p_latt) {
-		if (mbit&P_RANK) {Promotions_a(tx1);}else {markd(tx1);  push_mov_a(p, tx1); } };
-	}else
-	{//************************************************************************************ bb
-		tx=p + PAWN_MOV_10;tx1=p + PAWN_MOV_20;
-		if (p_1mov &mbit) {
-			if (!(mbit&P_RANK))    {
-				bool lisch=false;
-				dpthcntr[depth]++;
-				if (depth > 0){
-					moveTablePce_L<CLR_ATT>(V_PAWN, p, tx);
-					if(PAWN_ATT[a+PAWN_MOV_1]&(1ull<<thrk))
-					{lisch=true;check_MASK.push_back(1ull<<(a+PAWN_MOV_1));}
-					moves<CLR_P, CLR_ATT>(lmvcp, depth, lisch);lisch = false;
-					if(depth==PERFT_DEPTH  )divide(p,tx);
-					moveTablePce_L<CLR_ATT>(V_PAWN, tx, p);
-				}
-			}else{
-				Promotions();
-			}
-		}
-		//---------------------------------------------------------------------- 2 move
-			if(p_2mov &mbit) {
-				if(PAWN_ATT[a+PAWN_MOV_1]&them_ARR[V_PAWN]){lmvcp.ANP_AV=1;{markd(tx1); push_movp(p, tx1);}lmvcp.ANP_AV=0;}
-				else{
-					bool lisch=false;
-					dpthcntr[depth]++;
-					if (depth > 0){
-						moveTablePce_L<CLR_ATT>(V_PAWN, p, tx1);
-						if(PAWN_ATT[a+PAWN_MOV_2]&(1ull<<thrk))//lisch=true;
-						{lisch=true;check_MASK.push_back(1ull<<(a+PAWN_MOV_2));}
-						//psh++;
-						moves<CLR_P, CLR_ATT>(lmvcp, depth, lisch);
-						lisch = false;
-						if(depth==PERFT_DEPTH  )divide(p,tx1);
-						moveTablePce_L<CLR_ATT>(V_PAWN, tx1, p);
-					}
-				}
-			}
+        //_____________________________________________________________________ attack
+        tx=p + pawn_att[0];tx1=p + pawn_att[1];
+        if(mbit & p_ratt) {
+            if (mbit&P_RANK) {Promotions_a(tx);}else {markd(tx);  push_mov_a(p, tx); }}
+        if(mbit & p_latt) {
+            if (mbit&P_RANK) {Promotions_a(tx1);}else {markd(tx1);  push_mov_a(p, tx1); } };
+    }else
+    {//************************************************************************************ bb
+        tx=p + PAWN_MOV_10;tx1=p + PAWN_MOV_20;
+        if (p_1mov &mbit) {
+            if (!(mbit&P_RANK))    {
+                bool lisch=false;
+                dpthcntr[depth]++;
+                if (depth > 0){
+                    moveTablePce_L<CLR_ATT>(V_PAWN, p, tx);
+                    if(PAWN_ATT[a+PAWN_MOV_1]&(1ull<<thrk))
+                    {lisch=true;check_MASK.push_back(1ull<<(a+PAWN_MOV_1));}
+                    moves<CLR_P, CLR_ATT>(lmvcp, depth, lisch);lisch = false;
+                    if(depth==PERFT_DEPTH  )divide(p,tx);
+                    moveTablePce_L<CLR_ATT>(V_PAWN, tx, p);
+                }
+            }else{
+                Promotions();
+            }
+        }
+        //---------------------------------------------------------------------- 2 move
+        if(p_2mov &mbit) {
+            if(PAWN_ATT[a+PAWN_MOV_1]&them_ARR[V_PAWN]){lmvcp.ANP_AV=1;{markd(tx1); push_movp(p, tx1);}lmvcp.ANP_AV=0;}
+            else{
+                bool lisch=false;
+                dpthcntr[depth]++;
+                if (depth > 0){
+                    moveTablePce_L<CLR_ATT>(V_PAWN, p, tx1);
+                    if(PAWN_ATT[a+PAWN_MOV_2]&(1ull<<thrk))
+                    {lisch=true;check_MASK.push_back(1ull<<(a+PAWN_MOV_2));}
+                    moves<CLR_P, CLR_ATT>(lmvcp, depth, lisch);
+                    lisch = false;
+                    if(depth==PERFT_DEPTH  )divide(p,tx1);
+                    moveTablePce_L<CLR_ATT>(V_PAWN, tx1, p);
+                }
+            }
+        }
 
-		//_____________________________________________________________________ attack
-		tx=p + pawn_att[0];tx1=p + pawn_att[1];
-		if(mbit & p_ratt) {
-			if (mbit&P_RANK) {Promotions_a(tx);}
-			else {
-				bool lisch=false;
-				dpthcntr[depth]++;
-				if (depth > 0){
-					popPieceFromArray_L<CLR_P>(tx);
-					moveTablePce_L<CLR_ATT>(V_PAWN, p, tx);
-					if(PAWN_ATT[a+PAWN_ATT_L]&(1ull<<thrk))//lisch=true;
-					{lisch=true;check_MASK.push_back(1ull<<(a+PAWN_ATT_L));}
-					moves<CLR_P, CLR_ATT>(lmvcp, depth, lisch);lisch = false;
-					if(depth==PERFT_DEPTH  )divide(p,tx);
-					moveTablePce_L<CLR_ATT>(V_PAWN, tx, p);
-					retBackPiece_L<CLR_P>();
-				}
-			}}
-		if(mbit & p_latt) {
-			if (mbit&P_RANK) {Promotions_a(tx1);}
-			else {
-				bool lisch=false;
-				dpthcntr[depth]++;
-				if (depth > 0){
-					popPieceFromArray_L<CLR_P>(tx1);
-					moveTablePce_L<CLR_ATT>(V_PAWN, p, tx1);
-					if(PAWN_ATT[a+PAWN_ATT_R]&(1ull<<thrk))//lisch=true;
-					{lisch=true;check_MASK.push_back(1ull<<(a+PAWN_ATT_R));}
-					moves<CLR_P, CLR_ATT>(lmvcp, depth, lisch);lisch = false;
-					if(depth==PERFT_DEPTH  )divide(p,tx1);
-					moveTablePce_L<CLR_ATT>(V_PAWN, tx1, p);
-					retBackPiece_L<CLR_P>();
-				}
-			} }
-	}
-	}
+        //_____________________________________________________________________ attack
+        tx=p + pawn_att[0];tx1=p + pawn_att[1];
+        if(mbit & p_ratt) {
+            if (mbit&P_RANK) {Promotions_a(tx);}
+            else {
+                bool lisch=false;
+                dpthcntr[depth]++;
+                if (depth > 0){
+                    popPieceFromArray_L<CLR_P>(tx);
+                    moveTablePce_L<CLR_ATT>(V_PAWN, p, tx);
+                    if(PAWN_ATT[a+PAWN_ATT_L]&(1ull<<thrk))//lisch=true;
+                    {lisch=true;check_MASK.push_back(1ull<<(a+PAWN_ATT_L));}
+                    moves<CLR_P, CLR_ATT>(lmvcp, depth, lisch);lisch = false;
+                    if(depth==PERFT_DEPTH  )divide(p,tx);
+                    moveTablePce_L<CLR_ATT>(V_PAWN, tx, p);
+                    retBackPiece_L<CLR_P>();
+                }
+            }
+        }
+        if(mbit & p_latt) {
+            if (mbit&P_RANK) {Promotions_a(tx1);}
+            else {
+                bool lisch=false;
+                dpthcntr[depth]++;
+                if (depth > 0){
+                    popPieceFromArray_L<CLR_P>(tx1);
+                    moveTablePce_L<CLR_ATT>(V_PAWN, p, tx1);
+                    if(PAWN_ATT[a+PAWN_ATT_R]&(1ull<<thrk))//lisch=true;
+                    {lisch=true;check_MASK.push_back(1ull<<(a+PAWN_ATT_R));}
+                    moves<CLR_P, CLR_ATT>(lmvcp, depth, lisch);lisch = false;
+                    if(depth==PERFT_DEPTH  )divide(p,tx1);
+                    moveTablePce_L<CLR_ATT>(V_PAWN, tx1, p);
+                    retBackPiece_L<CLR_P>();
+                }
+            }
+        }
+    }
+}
 
-//??????????????????????????????????????????????????????????????????????? pawns
-/*	p = lpiecesl[M_PAWN].NEXT;
-	for (; p != 0; ) {
-	if (esq(p + pawn_mov[0])) { markd(p + pawn_mov[0]);  push_movp(p, p + pawn_mov[0]); };
-	if_clr(p + pawn_att[0]) {  markd(p + pawn_att[0]);  push_mov_a(p, p + pawn_att[0]); };
-	if_clr(p + pawn_att[1]) { markd(p + pawn_att[1]);  push_mov_a(p, p + pawn_att[1]); };
-	p = Table[p].NEXT;
-	}
-*/
+//######################################################## <knight bit logic>
 if constexpr(statAnalysis){cout << "knight logic:";}
-	lmvcp.IS_TK=0;
-		px=us_ARR[KNIGHT];
-		   while(px){
-		   int a=lsb(px);
-		   p=toBigTable[63^a];
-		   px^=1ull<<a;
-		   lmvcp.sig = KNIGHT;
-		   lmvcp.FR_PO = p;
-		   bool lisch = false;
-		   u_lol a2=KNIGHT_ATT[63^a];
-		   u_lol a3 = a2 &~us;
+lmvcp.IS_TK=0;
+px=us_ARR[KNIGHT];
+while(px){
+    int a=lsb(px);
+    p=toBigTable[63^a];
+    px^=1ull<<a;
+    lmvcp.sig = KNIGHT;
+    lmvcp.FR_PO = p;
+    bool lisch = false;
+    u_lol a2=KNIGHT_ATT[63^a];
+    u_lol a3 = a2 &~us;
 
-		if (1ull<<a & all_bl || (isch  && !CKECK_B)) {
-			if (!((1ull<<a) &usb) ){
-	//lmvcp.FR_PO=p;
-	lmvcp_a.FR_PO=p;
-	//for (int xi = 0; xi < 8; xi++) {
-		//int kni=KNIGHT_JUMPS[xi] + p;
+    if (1ull<<a & all_bl || (isch  && !CKECK_B)) {
+        if (!((1ull<<a) &usb) ){
+            lmvcp_a.FR_PO=p;
 
-		while (a3) {
-			u_int b = msb(a3);
-			u_lol movbit = 1ull << b;
-			a3 ^= movbit;
-			a2=KNIGHT_ATT[63^b];
-		u_int kni = toBigTable[63^b];
-		if (!((1ull<<b)&them)) {  markd(kni); push_movs(lmvcp, kni); }
-		else {  markd(kni);
-				  push_movs(lmvcp_a, kni); }
-	}
-	}
-		}else {
-			if(CKECK_B  ){a3&=CKECK_B;}
-			//if(depth>0)
-			while (a3) {
-				u_int b = msb(a3);
-				u_lol movbit = 1ull << b;
+            while (a3) {
+                u_int b = msb(a3);
+                u_lol movbit = 1ull << b;
+                a3 ^= movbit;
+                a2=KNIGHT_ATT[63^b];
+                u_int kni = toBigTable[63^b];
+                if (!((1ull<<b)&them)) {  markd(kni); push_movs(lmvcp, kni); }
+                else {  markd(kni);
+                    push_movs(lmvcp_a, kni); }
+            }
+        }
+    }else {
+        if(CKECK_B  ){a3&=CKECK_B;}
+        //if(depth>0)
+        while (a3) {
+            u_int b = msb(a3);
+            u_lol movbit = 1ull << b;
 
-				a2=KNIGHT_ATT[63^b];
-				u_int ee = toBigTable[63^b];
-				if (a2 & (1ull<<thrk)) { lisch=true;if(depth>0)check_MASK.push_back(1ull<<(b));}
-				else lisch = false;
-				a3 ^= movbit;
-				if (them & movbit) {
+            a2=KNIGHT_ATT[63^b];
+            u_int ee = toBigTable[63^b];
+            if (a2 & (1ull<<thrk)) { lisch=true;if(depth>0)check_MASK.push_back(1ull<<(b));}
+            else lisch = false;
+            a3 ^= movbit;
+            if (them & movbit) {
 
-					dpthcntr[depth]++;
-					//if (depth > 0){
-					move_take(KNIGHT,lmvcp);
-						/*popPieceFromArray_L<CLR_P>(ee);
-						moveTablePce_L<CLR_ATT>(KNIGHT, p, ee);psh++;
-							moves<CLR_P, CLR_ATT>(lmvcp, depth, lisch);lisch = false;
-							if(depth==PERFT_DEPTH  )divide(p,ee);
-						moveTablePce_L<CLR_ATT>(KNIGHT, ee, p);
-						retBackPiece_L<CLR_P>();*/
-				//}
-				}else {
-					dpthcntr[depth]++;
-					//if (depth > 0){
-					move_plain(KNIGHT,lmvcp);
-					//move_plain_lambda(KNIGHT,lmvcp,p,ee,lisch);
-						/*moveTablePce_L<CLR_ATT>(KNIGHT, p, ee);psh++;
-							moves<CLR_P, CLR_ATT>(lmvcp, depth, lisch);lisch = false;
-						if(depth==PERFT_DEPTH  )divide(p,ee);
-						moveTablePce_L<CLR_ATT>(KNIGHT, ee, p);*/
-				//}
-				}
-			}//else dpthcntr[depth]+=popcnt(a3);
-		}
-	}
-	assert_kings();
+                dpthcntr[depth]++;
+                //if (depth > 0){
+                move_take(KNIGHT,lmvcp);
+                /*popPieceFromArray_L<CLR_P>(ee);
+                                                moveTablePce_L<CLR_ATT>(KNIGHT, p, ee);psh++;
+                                                        moves<CLR_P, CLR_ATT>(lmvcp, depth, lisch);lisch = false;
+                                                        if(depth==PERFT_DEPTH  )divide(p,ee);
+                                                moveTablePce_L<CLR_ATT>(KNIGHT, ee, p);
+                                                retBackPiece_L<CLR_P>();*/
+                //}
+            }else {
+                dpthcntr[depth]++;
+                //if (depth > 0){
+                move_plain(KNIGHT,lmvcp);
+                //move_plain_lambda(KNIGHT,lmvcp,p,ee,lisch);
+                /*moveTablePce_L<CLR_ATT>(KNIGHT, p, ee);psh++;
+                                                        moves<CLR_P, CLR_ATT>(lmvcp, depth, lisch);lisch = false;
+                                                if(depth==PERFT_DEPTH  )divide(p,ee);
+                                                moveTablePce_L<CLR_ATT>(KNIGHT, ee, p);*/
+                //}
+            }
+        }//else dpthcntr[depth]+=popcnt(a3);
+    }
+}
+
+assert_kings();
+
+//######################################################## <rook bit logic>
 if constexpr(statAnalysis){cout << "rook logic:";}
-		px=us_ARR[ROOK];
+px=us_ARR[ROOK];
 while(px){
     int a=lsb(px);
     px^=1ull<<a;
@@ -3136,20 +2991,12 @@ while(px){
     ll.sig = ROOK;
     if constexpr(CLR_ATT == WHITE) {if (p == LEFT_BOT)ll.WH_CSL = 0;if (p == RIGHT_BOT) ll.WH_CSR = 0;}
     else {if (p == LEFT_TOP)ll.BL_CSL = 0;if (p == RIGHT_TOP) ll.BL_CSR = 0;}
-    u_lol prev_p = p;
     bool lisch = false;
-    //u_lol a1 = king_PLUS_Safety(a, all_pcs);
     u_lol rr = ROOK_RAYS[63^a];
     u_lol rp = (rr & all_pcs)|(1ull<<a);
-    //rp *= mics_r[a];
     rp *= mics_r13[a];
     rp >>= 51;
     rr &= ROOK_MASKS_BLCKS[a][rp];
-    /*if(rr!=a1){
-                        cout<< "-";
-                        dbgptr_ull(a1);
-                        dbgptr_ull(rr);
-                }//else cout << "=";*/
     u_lol a3 = (rr ) & ~us;
     /*if ((1ull<<a) & (usb&~thk_usb)){
                         int asx=BLCK_RAY.size()-1;
@@ -3162,605 +3009,314 @@ while(px){
         //if (1ull<<a & usb){u_lol crd=CORD[ourk][1ull<<a];a3&=crd;}
         while(a3){
             int b=lsb(a3);
-				a3^=1ull<<b;
-				int lp=toBigTable[63^b];
-			//for (int xx = 0; xx < 4; xx++) {
-				//int lp = p,
-				int ori = p;
-				//lp += ROOK_DIRECTIONS[xx];
-				if (!((1ull<<b)&them)) { { push_movp_r(ori, lp); } markd(lp); /*lp += ROOK_DIRECTIONS[xx];*/ }
-				else { {push_mov_a_r(ori, lp); } markd(lp); }
-			}
-		}else {
+            a3^=1ull<<b;
+            int lp=toBigTable[63^b];
+            int ori = p;
+            if (!((1ull<<b)&them)) { { push_movp_r(ori, lp); } markd(lp); }
+            else { {push_mov_a_r(ori, lp); } markd(lp); }
+        }
+    }else {
+        if(CKECK_B  ){a3&=CKECK_B;}
+        //if(depth>0)
+        while (a3) {
+            u_int b = msb(a3);u_lol movbit = 1ull << b;a3 ^= movbit;u_int ee = toBigTable[63 ^ b];
+            if (depth>0 &&movbit & th_ksr) {u_lol crd=CORD[thrk][b];if(!(crd&(wPCS_BITS|bPCS_BITS))){lisch=true;check_MASK.push_back(crd|movbit);}
+                else lisch = false;}
+            if (them & movbit) {
+                dpthcntr[depth]++;
+                //if (depth > 0){
+                move_take(ROOK,ll);
+                /*popPieceFromArray_L<CLR_P>(ee);
+                                                moveTablePce_L<CLR_ATT>(ROOK, p, ee);psh++;
+                                                        moves<CLR_P, CLR_ATT>(ll, depth, lisch);lisch = false;
+                                                        if(depth==PERFT_DEPTH  )divide(p,ee);
+                                                moveTablePce_L<CLR_ATT>(ROOK, ee, p);
+                                                retBackPiece_L<CLR_P>();*/
+                //}
+            }else {dpthcntr[depth]++;
+                //if (depth > 0){
+                move_plain(ROOK,ll);
+                //move_plain_lambda(ROOK,ll,p,ee,lisch);
+                /*moveTablePce_L<CLR_ATT>(ROOK, p, ee);psh++;
+                                                        moves<CLR_P, CLR_ATT>(ll, depth, lisch);lisch = false;
+                                                        if(depth==PERFT_DEPTH  )divide(p,ee);
+                                                moveTablePce_L<CLR_ATT>(ROOK, ee, p);*/
+                //}
+            }
+        }//else dpthcntr[depth]+=popcnt(a3);
+    }
+    //p = Table[p].NEXT;
+}
 
-			if(CKECK_B  ){a3&=CKECK_B;}
-
-			//if(depth>0)
-			while (a3) {
-				u_int b = msb(a3);u_lol movbit = 1ull << b;a3 ^= movbit;u_int ee = toBigTable[63 ^ b];
-				if (depth>0 &&movbit & th_ksr) {u_lol crd=CORD[thrk][b];if(!(crd&(wPCS_BITS|bPCS_BITS))){lisch=true;check_MASK.push_back(crd|movbit);}
-					else lisch = false;}
-				if (them & movbit) {
-					dpthcntr[depth]++;
-					//if (depth > 0){
-					move_take(ROOK,ll);
-						/*popPieceFromArray_L<CLR_P>(ee);
-						moveTablePce_L<CLR_ATT>(ROOK, p, ee);psh++;
-							moves<CLR_P, CLR_ATT>(ll, depth, lisch);lisch = false;
-							if(depth==PERFT_DEPTH  )divide(p,ee);
-						moveTablePce_L<CLR_ATT>(ROOK, ee, p);
-						retBackPiece_L<CLR_P>();*/
-					//}
-				}else {dpthcntr[depth]++;
-					//if (depth > 0){
-					move_plain(ROOK,ll);
-					//move_plain_lambda(ROOK,ll,p,ee,lisch);
-						/*moveTablePce_L<CLR_ATT>(ROOK, p, ee);psh++;
-							moves<CLR_P, CLR_ATT>(ll, depth, lisch);lisch = false;
-							if(depth==PERFT_DEPTH  )divide(p,ee);
-						moveTablePce_L<CLR_ATT>(ROOK, ee, p);*/
-				//}
-				}
-			}//else dpthcntr[depth]+=popcnt(a3);
-		}
-	//p = Table[p].NEXT;
-	}
+//######################################################## <bishop bit logic>
 if constexpr(statAnalysis){cout << "bishop logic:";}
 assert_kings();
-	lmvcp.IS_TK=0;
-	//p = lpiecesl[BISHOP].NEXT;
-	//for (; p != 0; ) {
+lmvcp.IS_TK=0;
 lmvcp.sig = BISHOP;
-		px=us_ARR[BISHOP];
-		   while(px){
-		   int a=lsb(px);
-		   px^=1ull<<a;
-		   p=toBigTable[63^a];
-	if (bits1[p] & all_bl || (isch  && !CKECK_B)) {
-		lmvcp.FR_PO = p;
-		lmvcp_a.FR_PO = p;
-		for (int xx = 0; xx < 4; xx++) {
-			int lp = p, ori = p;
-			lp += BISHOP_DIRECTIONS[xx];
-			whl_esq(lp) { { push_movs(lmvcp, lp); } lmvcp.sig = BISHOP;  cnt++; lp += BISHOP_DIRECTIONS[xx]; }
-			if_clr(lp) {  markd(lp); push_movs(lmvcp_a, lp); }
-		}
-	}
-	else {
-		lmvcp.FR_PO = p;
-		u_lol prev_p = p;
-		bool lisch = false;
-		//auto a2 = king_XRAY_Safety(a, all_pcs);
-
-		u_lol rr = BISHOP_RAYS[63^a];
-		u_lol rp = (rr & all_pcs)|(1ull<<a);
-		rp *= magics_b_12[a];
-		rp >>= 52;
-		u_lol a2 = BISHOP_MASKS_BLCKS[a][rp];
-		/*if(a2!=rr){
-			cout <<a<< "---";
-			dbgptr_ull(a2);
-			dbgptr_ull(rr);
-		}*/
-		//----------------------------------------------------
-/*
-		struct s{
-		   uint32_t f;
-		   uint32_t s;
-		};
-		union{
-			s ls;
-			unsigned long long m;
-		};
-
-		int r=0;
-		int cnt = 100000;
-while(cnt-->0){
-		ls.f=mt();
-		//ls.f|=mt();
-		ls.s=mt();
-		//ls.s|=mt();
-a2 = king_XRAY_Safety(r, m);
-//int aaa = mt() & 63;
-u_lol bmsk,amsk,blck;
-struct st11{u_lol btm;u_lol blm;};
-array<u_lol ,16384> blocks{};
-#include <set>
-int b_pos=0;
-u_char ch_bits[64];
-vector<st11> vst11(16384);
-auto abc=[](st11 const&in1,st11 const&in2){return in1.btm <in2.btm;};
-set<st11,decltype(abc)> sull(abc);
-#define bitshft 52
-int rndnd=m;ls.f=mt();ls.s=mt();rndnd&=m;ls.f=mt();ls.s=mt();m&=rndnd;
-//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-cout << " enter ";
-for(b_pos=0;b_pos<64;b_pos++){
-	for (int x = 0; x < 64; x++) { ch_bits[x]=0xff;}
-u_lol b_blck;//;
-u_lol b_blck1= BISHOP_RAYS[b_pos];
-char bit_cnt=popcnt(b_blck1);
-u_lol x_cnt=1ull<<bit_cnt;
-for (int x = 0; x < bit_cnt; x++) {
-int a=lsb(b_blck1);
-b_blck1^=1ull<<a;
-ch_bits[bit_cnt]=a;
+px=us_ARR[BISHOP];
+while(px){
+    int a=lsb(px);
+    px^=1ull<<a;
+    p=toBigTable[63^a];
+    if (bits1[p] & all_bl || (isch  && !CKECK_B)) {
+        lmvcp.FR_PO = p;
+        lmvcp_a.FR_PO = p;
+        for (int xx = 0; xx < 4; xx++) {
+            int lp = p;
+            lp += BISHOP_DIRECTIONS[xx];
+            whl_esq(lp) { { push_movs(lmvcp, lp); } lmvcp.sig = BISHOP;  cnt++; lp += BISHOP_DIRECTIONS[xx]; }
+            if_clr(lp) {  markd(lp); push_movs(lmvcp_a, lp); }
+        }
+    }
+    else {
+        lmvcp.FR_PO = p;
+        bool lisch = false;
+        u_lol rr = BISHOP_RAYS[63^a];
+        u_lol rp = (rr & all_pcs)|(1ull<<a);
+        rp *= magics_b_12[a];
+        rp >>= 52;
+        u_lol a2 = BISHOP_MASKS_BLCKS[a][rp];
+        if (2) {}
+        u_lol a3 = a2 &~us;
+        if(CKECK_B  ){a3&=CKECK_B;}
+        //if(depth>0)
+        while (a3) {
+            u_int b = msb(a3);
+            u_lol movbit = 1ull << b;
+            a3 ^= movbit;
+            u_int ee = toBigTable[63 ^ b];
+            if (movbit & th_ksb) {
+                u_lol crd=CORD[thrk][b];
+                if((depth>0)&&!(crd&(wPCS_BITS|bPCS_BITS))){lisch=true;check_MASK.push_back(crd|movbit);}
+                else lisch = false;
+            }
+            if (them & movbit) {
+                dpthcntr[depth]++;
+                //if (depth > 0){
+                move_take(BISHOP,lmvcp);
+                /*popPieceFromArray_L<CLR_P>(ee);
+                                        moveTablePce_L<CLR_ATT>(BISHOP, p, ee);psh++;
+                                                moves<CLR_P, CLR_ATT>(lmvcp, depth, lisch);lisch = false;
+                                                if(depth==PERFT_DEPTH  )divide(p,ee);
+                                        moveTablePce_L<CLR_ATT>(BISHOP, ee, p);
+                                        retBackPiece_L<CLR_P>();*/
+                //}
+            }
+            else {
+                dpthcntr[depth]++;
+                //if (depth > 0){
+                move_plain(BISHOP,lmvcp);
+                //move_plain_lambda(BISHOP,lmvcp,p,ee,lisch);
+                /*moveTablePce_L<CLR_ATT>(BISHOP, p, ee);psh++;
+                                                moves<CLR_P, CLR_ATT>(lmvcp, depth, lisch);lisch = false;
+                                                if(depth==PERFT_DEPTH  )divide(p,ee);
+                                        moveTablePce_L<CLR_ATT>(BISHOP, ee, p);*/
+                //}
+            }
+        } //else dpthcntr[depth]+=popcnt(a3);
+    }
 }
-for (u_lol x = 0; x < x_cnt; x++) {
-	b_blck=BISHOP_RAYS[63-b_pos];
-bits67(b_blck,bmsk, x,b_pos,bit_cnt,ch_bits);
-bmsk|=1ull<<b_pos;
-st11 sss{bmsk,b_blck};
-sull.insert(sss);
-}
-cout << sull.size() << "=======0=======" << endl;
-*/
-/*
-for(u_char hc=0;hc<128;hc++){
-	for(u_char vc=0;vc<128;vc++){
- bits66(blck,bmsk, amsk,b_pos,hc,vc);
- //
- int ixx=hc*128+vc;
- vst11[ixx].btm=bmsk;
- vst11[ixx].blm=blck;
-	}
-
-}*//*
-//u_lol sum_try=0;
-//sort(vst11.begin(),vst11.end(),[](st11&in1,st11&in2){return in1.btm <in2.btm;});
-shuffle(vst11.begin(),vst11.end(), std::default_random_engine(5));
-//if(sull.size()==8192){
-memset(&blocks[0],0,8192*8);
-	u_lol inx,cntr=0;
-	vector<st11> vst11_; (std::copy(sull.begin(), sull.end(), std::back_inserter(vst11_)));
-	shuffle(vst11_.begin(),vst11_.end(), std::default_random_engine(5));
-	for(u_lol uu=0;uu<100000000000;uu++){
-	ls.s=mt();ls.f=mt();rndnd=m;   ls.f=mt();ls.s=mt();rndnd&=m;ls.f=mt();ls.s=mt();m&=rndnd;//m&=0xfffffffffffdff00;////0xfff811fffdf8f300;
-	if (m<10000000000)continue;
-int pcn=popcnt(ls.f);if(pcn>7 || pcn <2)continue;
-	for (auto &b : vst11_){inx=((b.btm*m)>>bitshft);if(blocks[inx]!=b.blm && blocks[inx]!=0)break;
-	blocks[inx]=b.blm;
-	//if(b.blm==0)cout<<"x";
-	//dbgptr_ull(blocks[inx]);
-	cntr++;
-	//if(cntr>1&&inx==0){break;}
-	}
-	if(cntr>3000 && cntr!=8192){
-		//mas_bits |=m;
-		cout << "\n"<< std::hex  << std::dec << "\n";
-	cout << cntr << " " << std::hex<< m<<std::dec << " "; dbgptr_ull1(m);cout <<" "<< uu<< " " << popcnt(m)<<endl;}
-u_lol sz=sull.size();
-	if(cntr==sz){cout << "found " << std::hex<< m<< " bb pos: "<< std::dec << b_pos << " try : " <<uu << " Cycl: "<<sum_try << std::endl;
-
-		for(int x=0;x<sz;x++){
-			//if(vst11[x].btm==0)continue;
-			u_lol att_mask = king_XRAY_Safety(b_pos, vst11_[x].btm);
-			inx=(vst11_[x].btm*m)>>bitshft;
-			//sull.insert(inx);
-			//cout << inx;
-			//dbgptr_ull(blocks[11]);
-			//dbgptr_ull(blocks[inx]);
-			//dbgptr_ull(vst11[x].btm);
-			u_lol ra=BISHOP_RAYS[63-b_pos];
-			u_lol fm=blocks[inx];
-			//cout << (fm==ROOK_MASKS_BLCKS[0][inx]);
-			//dbgptr_ull(fm);
-			//dbgptr_ull(ROOK_MASKS_BLCKS[0][inx]);
-			//cout << ".";
-			//if(fm!=0)
-			u_lol tt=magics_b_12[b_pos];
-			if(m!=tt)cout << "+_+_";
-			if((fm&ra)!=att_mask){
-				cout << "+" <<inx;
-				dbgptr_ull(fm);
-				dbgptr_ull(ra);
-				//dbgptr_ull(fm&ra);
-				//dbgptr_ull(att_mask);
-			}
-			//blocks[inx]=0;
-		}
-memset(&blocks[0],0,8192*8);
-		break;}
-
-
-	if(cntr>1000)memset(&blocks[0],0,8192*8);
-	else{
-		for(u_lol x=0;x<cntr;x++){
-			blocks[(vst11_[x].btm*m)>>bitshft]=0;
-		}
-	}
-	//cout << cntr << endl;
-	cntr=0;
-	}
-
-//}
-u_lol mas_bits=0;
-//cout<< "enter : " << endl;*/
-/*for(u_lol uu=0;uu<100000000000;uu++){
-int cntr=0;
-u_lol inx;
-
-//cout<< "enter1 : " << endl;
-ls.s=mt();ls.f=mt();rndnd=m;   ls.f=mt();ls.s=mt();rndnd&=m;ls.f=mt();ls.s=mt();m&=rndnd;//m&=0xfffffffffffdff00;////0xfff811fffdf8f300;
-if (m<10000000000)continue;
-//int pcn=popcnt(ls.f);if(pcn>7 || pcn <2)continue;
-//cout << m<<" ";
-//cout<< "enter2 : " << endl;
-for (auto &b : vst11){inx=((b.btm*m)>>bitshft);if(blocks[inx]!=b.blm && blocks[inx]!=0)break;
-blocks[inx]=b.blm;
-//if(b.blm==0)cout<<"x";
-//dbgptr_ull(blocks[inx]);
-cntr++;
-//if(cntr>1&&inx==0){break;}
-}
-//cout << cntr << " ";
-if(cntr >1)sum_try += cntr;
-//cout << cntr <<" ";
-if(cntr>1300 && cntr!=16384){
-	mas_bits |=m;
-	cout << "\n"<< std::hex << mas_bits << std::dec << "\n";
-cout << cntr << " " << std::hex<< m<<std::dec << " "; dbgptr_ull1(m);cout <<" "<< uu<< " " << popcnt(m)<<endl;}
-//cout << m<<" ";
-if(cntr==16384){cout << "found " << std::hex<< m<< " bb pos: "<< std::dec << b_pos << " try : " <<uu << " Cycl: "<<sum_try << std::endl;
-
-		//dbgptr_ull(blocks[11]);
-	for(int x=0;x<16384;x++){
-		u_lol att_mask = king_PLUS_Safety(b_pos, vst11[x].btm);
-		inx=(vst11[x].btm*m)>>bitshft;
-		//sull.insert(inx);
-		//cout << inx;
-		//dbgptr_ull(blocks[11]);
-		//dbgptr_ull(blocks[inx]);
-		//dbgptr_ull(vst11[x].btm);
-		u_lol ra=ROOK_RAYS[63-b_pos];
-		u_lol fm=blocks[inx];
-		//cout << (fm==ROOK_MASKS_BLCKS[0][inx]);
-		//dbgptr_ull(fm);
-		//dbgptr_ull(ROOK_MASKS_BLCKS[0][inx]);
-		//cout << ".";
-		if((fm&ra)!=att_mask){
-			cout << "+" <<inx;
-			dbgptr_ull(fm);
-			dbgptr_ull(ra);
-			dbgptr_ull(fm&ra);
-			dbgptr_ull(att_mask);
-		}
-		//blocks[inx]=0;
-	}
-	//cout << sull.size()<< " ";//No errors ????" << endl;
-	memset(&blocks[0],0,16384*8);
-	//for(auto b:sull)cout << b<< " ";
-	//sull.clear();
-	cout << endl;
-	break;
-}
-if(cntr>1000)memset(&blocks[0],0,16384*8);
-else{
-	for(int x=0;x<cntr;x++){
-		blocks[(vst11[x].btm*m)>>bitshft]=0;
-	}
-}
-//cout << m<<"\n";
-}*//*
-sull.clear();
-}
-//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-			//dbgptr_ull(m);
-		u_lol pl= get_bmask(r,a2);
-		//if(popcnt(a2)==1)
-		//if((BISHOP_RAYS[63-r] &pl) == a2){cout << "ERRrr???????? ---->\n";dbgptr_ull(BISHOP_RAYS[63-r]);dbgptr_ull(pl);dbgptr_ull(a2);}
-		masks.insert(pl);
-		r++;if(r>63)r=0;
-		}
-cout << masks.size() << " " << endl;
-//for(int ooo=0;ooo<64;ooo++){cout << "------    "<<    ooo<<" -----------------";for(auto b:masks)if(popcnt(b)==ooo)dbgptr_ull(b);}
-for(int y=0;y<10000;y++){
-	ls.f=mt();
-	//ls.f|=mt();
-	ls.s=mt();
-	//ls.s|=mt();
-a2 = king_XRAY_Safety(r, m);
-int aw=0;
-for(auto b:masks){
-	if((b&BISHOP_RAYS[63-r])==a2){cout << "found : " << aw << endl;break;}
-	aw++;
-}
-	if(aw>=masks.size())cout << "fail";
-r++;if(r>63)r=0;
-
-
-}
-
-masks.clear();
-*/
-//cout << "\n--------------------------------------------------\n";
-		//+++++++++++++++++++++++++++++++++++++++++++++++++++
-		//auto [a1, a2] = kingBSafety<CLR_ATT, CLR_P>(p, them | us);
-		if (2) {}
-		u_lol a3 = a2 &~us;
-		if(CKECK_B  ){a3&=CKECK_B;}
-		//if(depth>0)
-		while (a3) {
-			u_int b = msb(a3);
-			u_lol movbit = 1ull << b;
-			a3 ^= movbit;
-			u_int ee = toBigTable[63 ^ b];
-
-			if (movbit & th_ksb) {
-				u_lol crd=CORD[thrk][b];
-					if((depth>0)&&!(crd&(wPCS_BITS|bPCS_BITS))){lisch=true;check_MASK.push_back(crd|movbit);/*cout<<"BISH ";printt();dbgptr_ull(crd|movbit);*/}
-				else lisch = false;
-			}
-			if (them & movbit) {
-				dpthcntr[depth]++;
-				//if (depth > 0){
-				move_take(BISHOP,lmvcp);
-					/*popPieceFromArray_L<CLR_P>(ee);
-					moveTablePce_L<CLR_ATT>(BISHOP, p, ee);psh++;
-						moves<CLR_P, CLR_ATT>(lmvcp, depth, lisch);lisch = false;
-						if(depth==PERFT_DEPTH  )divide(p,ee);
-					moveTablePce_L<CLR_ATT>(BISHOP, ee, p);
-					retBackPiece_L<CLR_P>();*/
-			//}
-			}
-			else {
-				dpthcntr[depth]++;
-				//if (depth > 0){
-				move_plain(BISHOP,lmvcp);
-				//move_plain_lambda(BISHOP,lmvcp,p,ee,lisch);
-					/*moveTablePce_L<CLR_ATT>(BISHOP, p, ee);psh++;
-						moves<CLR_P, CLR_ATT>(lmvcp, depth, lisch);lisch = false;
-						if(depth==PERFT_DEPTH  )divide(p,ee);
-					moveTablePce_L<CLR_ATT>(BISHOP, ee, p);*/
-			//}
-			}
-
-		} //else dpthcntr[depth]+=popcnt(a3);
-	}
-	}
 assert_kings();
+
+//######################################################## <queen bit logic>
 if constexpr(statAnalysis){cout << "queen logic:";}
-	//for (; p != 0; ) {
-//____________________________________________________________________ queen
 lmvcp.sig = QUEEN;
 lmvcp_a.sig = QUEEN;
-		px=us_ARR[QUEEN];
-		   while(px){
-		   int a=lsb(px);
-		   p=toBigTable[63^a];
-		   px^=1ull<<a;
-		   bool lisch=false;
-		   //auto [a1,a2]= kingBSafety<CLR_ATT,CLR_P>(p, all_pcs);
-		   //u_lol a3=(a1|a2) & ~us;
-			u_lol a3=attMaskStar(a,all_pcs)& ~us;
+px=us_ARR[QUEEN];
+while(px){
+    int a=lsb(px);
+    p=toBigTable[63^a];
+    px^=1ull<<a;
+    bool lisch=false;
+    u_lol a3=attMaskStar(a,all_pcs)& ~us;
+    if (1ull<<a & all_bl || (isch  && !CKECK_B)) {
+        lmvcp.FR_PO = p;
+        lmvcp_a.FR_PO = p;
+        while(a3){
+            int b=lsb(a3);
+            a3^=1ull<<b;
+            int lp=toBigTable[63^b];
+            if (!((1ull<<b)&them)) {
+                cnt++; push_movs(lmvcp, lp);
+            }
+            else {cnt++; push_movs(lmvcp_a, lp); }
+        }
+    }
+    else {
 
-			/*if (a3!=a4){
-			   cout<< "-=-=-";
-		   dbgptr_ull(a3);
-		   dbgptr_ull(a4);
-		   }*/
-			//if (1ull<<a & all_bl)(isch,usb  , thk_usb,a3,p,a,lmvcp,CKECK_B)
+        if(CKECK_B  ){a3&=CKECK_B;}
+        auto pp=p;
+        //if(depth>0)
+        while(a3){
+            u_int b=msb(a3);
+            u_lol movbit=1ull<<b;
+            a3^=movbit;
+            u_int ee=toBigTable[63-b];
+            if(movbit&th_ks){
+                u_lol crd=CORD[thrk][b];
+                if(depth>0 && !(crd&(wPCS_BITS|bPCS_BITS))){lisch=true;check_MASK.push_back(crd|movbit);}
+                else{ lisch= false;}
+            }
+            if(them &movbit){
+                dpthcntr[depth]++;psh++;
+                //if(depth>0){
+                move_take(QUEEN,lmvcp);
+                /*popPieceFromArray_L<CLR_P>(ee);
+                                        moveTablePce_L<CLR_ATT>(QUEEN,p,ee);
+                                        moves<CLR_P,CLR_ATT>(lmvcp,depth,lisch);lisch=false;
+                                        if(depth==PERFT_DEPTH  )divide(p,ee);
+                                        moveTablePce_L<CLR_ATT>(QUEEN,ee,p);
+                                        retBackPiece_L<CLR_P>();*/
+                //}
+            }else{
+                dpthcntr[depth]++;psh++;
+                move_plain(QUEEN,lmvcp);
+                //move_plain_lambda(QUEEN,lmvcp,p,ee,lisch);
+                //if(depth>0){
 
-				   if (1ull<<a & all_bl || (isch  && !CKECK_B)) {
-					   //if (1ull<<a & usb){u_lol crd=CORD[ourk][1ull<<a];a3&=crd;}
-			lmvcp.FR_PO = p;
-			lmvcp_a.FR_PO = p;
-			while(a3){
-				int b=lsb(a3);
-				a3^=1ull<<b;
-				int lp=toBigTable[63^b];
+                /*moveTablePce_L<CLR_ATT>(QUEEN,p,ee);
 
-			//for (int xx = 0; xx < 8; xx++) {
-				//int lp = p,
-					//int	ori = p;
-				//lp += QUEEN_DIRECTIONS[xx];
-				if (!((1ull<<b)&them)) {
-					/*lmvcp.sig = 6; markd(lp);*/cnt++; push_movs(lmvcp, lp); /* lp += QUEEN_DIRECTIONS[xx];*/
-				}
-				else {/* markd(lp);*/cnt++; push_movs(lmvcp_a, lp); }
-			}
+                                        moves<CLR_P,CLR_ATT>(lmvcp,depth,lisch);lisch=false;
+                                        if(depth==PERFT_DEPTH  )divide(p,ee);
+                                        //p=ee;
+                                        moveTablePce_L<CLR_ATT>(QUEEN,ee,p);*/
+                //}
+            }//}
 
-	}
-	else {
-
-				if(CKECK_B  ){a3&=CKECK_B;}
-		/*if(a3){
-			printt();
-			dbgptr_ull(a3);
-		}*/
-		//}
-				auto pp=p;
-				//if(depth>0)
-		while(a3){
-
-			u_int b=msb(a3);
-			u_lol movbit=1ull<<b;
-			a3^=movbit;
-			u_int ee=toBigTable[63-b];
-
-
-			if(movbit&th_ks){
-				u_lol crd=CORD[thrk][b];
-					if(depth>0 && !(crd&(wPCS_BITS|bPCS_BITS))){lisch=true;check_MASK.push_back(crd|movbit);}
-					else{ lisch= false;/*cout <<";";*/}
-					}
-
-			if(them &movbit){
-				dpthcntr[depth]++;psh++;
-				//if(depth>0){
-				 move_take(QUEEN,lmvcp);
-				/*popPieceFromArray_L<CLR_P>(ee);
-					moveTablePce_L<CLR_ATT>(QUEEN,p,ee);
-					moves<CLR_P,CLR_ATT>(lmvcp,depth,lisch);lisch=false;
-					if(depth==PERFT_DEPTH  )divide(p,ee);
-					moveTablePce_L<CLR_ATT>(QUEEN,ee,p);
-					retBackPiece_L<CLR_P>();*/
-				//}
-			}else{
-				dpthcntr[depth]++;psh++;
-				move_plain(QUEEN,lmvcp);
-				//move_plain_lambda(QUEEN,lmvcp,p,ee,lisch);
-				//if(depth>0){
-
-					/*moveTablePce_L<CLR_ATT>(QUEEN,p,ee);
-
-					moves<CLR_P,CLR_ATT>(lmvcp,depth,lisch);lisch=false;
-					if(depth==PERFT_DEPTH  )divide(p,ee);
-					//p=ee;
-					moveTablePce_L<CLR_ATT>(QUEEN,ee,p);*/
-				//}
-			}//}
-
-		}///----
-		//else dpthcntr[depth]+=popcnt(a3);
-				//if(p!=pp)moveTablePce_L<CLR_ATT>(QUEEN,p,pp);
-	}
-	//p = Table[p].NEXT;
+        }///----
+        //else dpthcntr[depth]+=popcnt(a3);
+    }
 }
+//######################################################## <king bit logic>
 if constexpr(statAnalysis){cout << "king logic:";}
-	assert_kings();
-	//p = lpiecesl[C2_KING].NEXT;
-	//for (; p != 0; ) {
-		px=us_ARR[C2_KING];
-		   while(px){
-		   int a=lsb(px);
-		   px^=1ull<<a;
-		   p=toBigTable[63-a];
-		moveCPiece ll=lmvcp;
-ll.sig=C2_KING;
-		if constexpr(CLR_ATT==WHITE){
-		ll.WH_CSL=0;
-		ll.WH_CSR=0;
-	}else{
-		ll.BL_CSL=0;
-		ll.BL_CSR=0;
-	}
-		u_lol katt=KING_ATT[63-a];
-		katt &= ~us;
-		while(katt){
-			int b=lsb(katt);
-			katt^=1ull<<b;
-			int lp=toBigTable[63-b];
-			//for (int xx = 0; xx < 8; xx++) {
-		//int lp = p;
-		//lp += QUEEN_DIRECTIONS[xx];
-		if (!((1ull<<b)&them)) {
-			if (bits1[p] & all_bl){markd(lp); push_movp_r(p, lp);}
-			else{
-			moveTablePce_L<CLR_ATT>(C2_KING,p,lp);
-			//if(kingSafety<CLR_ATT , CLR_P>(lp)!=KING_VAL)
-			if(king_ALL_Safety<CLR_ATT>(0)!=KING_VAL)
-			{
-				int aa=0;
-
-				if (depth)
-				aa=moves<CLR_P,CLR_ATT>(ll,depth,0);
-				if(depth==PERFT_DEPTH  )divide(p,lp);
-				psh++;
-					dpthcntr[depth]++;
-			}
-			moveTablePce_L<CLR_ATT>(C2_KING,lp,p);
-		 //
-		}
-		}
-		else /*if (Table[lp].CLR == CLR_P)*/ {
-
-			if (bits1[p] & all_bl){markd(lp); push_mov_a_r(p, lp);}
-			else{
-				popPieceFromArray_L<CLR_P>(lp);
-			moveTablePce_L<CLR_ATT>(C2_KING,p,lp);
-			//if(kingSafety<CLR_ATT , CLR_P>(lp)!=KING_VAL)
-			if(king_ALL_Safety<CLR_ATT>(0)!=KING_VAL)
-			{
-				//int aa=0;
-
-				if (depth)
-				moves<CLR_P,CLR_ATT>(ll,depth,0);
-				if(depth==PERFT_DEPTH  )divide(p,lp);
-				psh++;
-					dpthcntr[depth]++;
-			}
-			moveTablePce_L<CLR_ATT>(C2_KING,lp,p);
-			retBackPiece_L<CLR_P>();
-		 //
-		}
-
-		 //markd(lp); push_mov_a_r(p, lp);
-		}
-	}
-	//p = Table[p].NEXT;
-	}
-if constexpr(statAnalysis){cout << "castle logic:";}
-	if constexpr (CLR_ATT == WHITE){
-	int posk=toBigTable[63-ourk];//lpiecesl[C2_KING].NEXT;
-	moveCPiece ll=lmvcp;
 assert_kings();
-	if(lmvcp.WH_CSL){
-		if((all_pcs&0x70)==0){
-		//if(Table[posk-1].PCE==EMPTY && Table[posk-2].PCE==EMPTY&& Table[posk-3].PCE==EMPTY){
-		if(kingSafety<CLR_ATT , CLR_P>(posk)!=KING_VAL && kingSafety<CLR_ATT , CLR_P>(posk-1)!=KING_VAL && kingSafety<CLR_ATT , CLR_P>(posk-2)!=KING_VAL ){
+px=us_ARR[C2_KING];
+while(px){
+    int a=lsb(px);
+    px^=1ull<<a;
+    p=toBigTable[63-a];
+    moveCPiece ll=lmvcp;
+    ll.sig=C2_KING;
+    if constexpr(CLR_ATT==WHITE){
+        ll.WH_CSL=0;
+        ll.WH_CSR=0;
+    }else{
+        ll.BL_CSL=0;
+        ll.BL_CSR=0;
+    }
+    u_lol katt=KING_ATT[63-a];
+    katt &= ~us;
+    while(katt){
+        int b=lsb(katt);
+        katt^=1ull<<b;
+        int lp=toBigTable[63-b];
+        if (!((1ull<<b)&them)) {
+            if (bits1[p] & all_bl){markd(lp); push_movp_r(p, lp);}
+            else{
+                moveTablePce_L<CLR_ATT>(C2_KING,p,lp);
+                if(king_ALL_Safety<CLR_ATT>(0)!=KING_VAL)
+                {
+                    int aa=0;
+                    if (depth)
+                        aa=moves<CLR_P,CLR_ATT>(ll,depth,0);
+                    if(depth==PERFT_DEPTH  )divide(p,lp);
+                    psh++;
+                    dpthcntr[depth]++;
+                }
+                moveTablePce_L<CLR_ATT>(C2_KING,lp,p);
+            }
+        }
+        else {
 
-			if(Table[91].PCE==ROOK && Table[91].STAT==1){
-			moveCPiece ll=lmvcp;
-			ll.WH_CSR=0;
-			ll.WH_CSL=0;
-			castle<CLR_ATT,CLR_P>(posk,91,depth,ll,-2,us_ks,th_ksr,th_ksb);
-				}else lmvcp.WH_CSL=0;
+            if (bits1[p] & all_bl){markd(lp); push_mov_a_r(p, lp);}
+            else{
+                popPieceFromArray_L<CLR_P>(lp);
+                moveTablePce_L<CLR_ATT>(C2_KING,p,lp);
+                if(king_ALL_Safety<CLR_ATT>(0)!=KING_VAL)
+                {
+                    if (depth)
+                        moves<CLR_P,CLR_ATT>(ll,depth,0);
+                    if(depth==PERFT_DEPTH  )divide(p,lp);
+                    psh++;
+                    dpthcntr[depth]++;
+                }
+                moveTablePce_L<CLR_ATT>(C2_KING,lp,p);
+                retBackPiece_L<CLR_P>();
+            }
+        }
+    }
+}
+//######################################################## <castle ?bit? logic>
+if constexpr(statAnalysis){cout << "castle logic:";}
+if constexpr (CLR_ATT == WHITE){
+    int posk=toBigTable[63-ourk];
+    moveCPiece ll=lmvcp;
+    assert_kings();
+    if(lmvcp.WH_CSL){
+        if((all_pcs&0x70)==0){
+            //if(Table[posk-1].PCE==EMPTY && Table[posk-2].PCE==EMPTY&& Table[posk-3].PCE==EMPTY){
+            if(kingSafety<CLR_ATT , CLR_P>(posk)!=KING_VAL && kingSafety<CLR_ATT , CLR_P>(posk-1)!=KING_VAL && kingSafety<CLR_ATT , CLR_P>(posk-2)!=KING_VAL ){
 
-		}
-		}
-	}
-	if(lmvcp.WH_CSR){
-		if((all_pcs&0x6)==0){
-		//if(Table[posk+1].PCE==EMPTY && Table[posk+2].PCE==EMPTY){
-		if((k1=kingSafety<CLR_ATT , CLR_P>(posk))!=KING_VAL&& (k2=kingSafety<CLR_ATT , CLR_P>(posk+1))!=KING_VAL&& (k3=kingSafety<CLR_ATT , CLR_P>(posk+2))!=KING_VAL){
+                if(Table[91].PCE==ROOK && Table[91].STAT==1){
+                    moveCPiece ll=lmvcp;
+                    ll.WH_CSR=0;
+                    ll.WH_CSL=0;
+                    castle<CLR_ATT,CLR_P>(posk,91,depth,ll,-2,us_ks,th_ksr,th_ksb);
+                }else lmvcp.WH_CSL=0;
 
-			if(Table[98].PCE==ROOK && Table[98].STAT==2){
-			moveCPiece ll=lmvcp;
-			ll.WH_CSR=0;
-			ll.WH_CSL=0;
-			castle<CLR_ATT,CLR_P>(posk,98,depth,ll,2,us_ks,th_ksr,th_ksb);
-				}else lmvcp.WH_CSR=0;
+            }
+        }
+    }
+    if(lmvcp.WH_CSR){
+        if((all_pcs&0x6)==0){
+            //if(Table[posk+1].PCE==EMPTY && Table[posk+2].PCE==EMPTY){
+            if((k1=kingSafety<CLR_ATT , CLR_P>(posk))!=KING_VAL&& (k2=kingSafety<CLR_ATT , CLR_P>(posk+1))!=KING_VAL&& (k3=kingSafety<CLR_ATT , CLR_P>(posk+2))!=KING_VAL){
 
-		}
-		}
-	}
-	}else{
-	u_int posk=toBigTable[63-ourk];//lpiecesl[C2_KING].NEXT;
-	moveCPiece ll=lmvcp;
-	ll.BL_CSR=0;
-	ll.BL_CSL=0;
-	if(lmvcp.BL_CSL){
-		if((all_pcs&(0x70ull<<56))==0){
-		///if(Table[posk-1].PCE==EMPTY && Table[posk-2].PCE==EMPTY&& Table[posk-3].PCE==EMPTY){
-		if(kingSafety<CLR_ATT , CLR_P>(posk)!=KING_VAL && kingSafety<CLR_ATT , CLR_P>(posk-1)!=KING_VAL && kingSafety<CLR_ATT , CLR_P>(posk-2)!=KING_VAL ){
+                if(Table[98].PCE==ROOK && Table[98].STAT==2){
+                    moveCPiece ll=lmvcp;
+                    ll.WH_CSR=0;
+                    ll.WH_CSL=0;
+                    castle<CLR_ATT,CLR_P>(posk,98,depth,ll,2,us_ks,th_ksr,th_ksb);
+                }else lmvcp.WH_CSR=0;
 
-			if(Table[21].PCE==ROOK && Table[21].STAT==1){
-			moveCPiece ll=lmvcp;
-			ll.BL_CSR=0;
-			ll.BL_CSL=0;
-			castle<CLR_ATT,CLR_P>(posk,21,depth,ll,-2,us_ks,th_ksr,th_ksb);
-				}else lmvcp.BL_CSL=0;
+            }
+        }
+    }
+}else{
+    u_int posk=toBigTable[63-ourk];
+    moveCPiece ll=lmvcp;
+    ll.BL_CSR=0;
+    ll.BL_CSL=0;
+    if(lmvcp.BL_CSL){
+        if((all_pcs&(0x70ull<<56))==0){
+            ///if(Table[posk-1].PCE==EMPTY && Table[posk-2].PCE==EMPTY&& Table[posk-3].PCE==EMPTY){
+            if(kingSafety<CLR_ATT , CLR_P>(posk)!=KING_VAL && kingSafety<CLR_ATT , CLR_P>(posk-1)!=KING_VAL && kingSafety<CLR_ATT , CLR_P>(posk-2)!=KING_VAL ){
 
-		}
-		}
-	}
-	if(lmvcp.BL_CSR){
-		if((all_pcs&(0x6ull<<56))==0){
-		//if(Table[posk+1].PCE==EMPTY && Table[posk+2].PCE==EMPTY){
-		if(kingSafety<CLR_ATT , CLR_P>(posk)!=KING_VAL && kingSafety<CLR_ATT , CLR_P>(posk+1)!=KING_VAL && kingSafety<CLR_ATT , CLR_P>(posk+2)!=KING_VAL ){
+                if(Table[21].PCE==ROOK && Table[21].STAT==1){
+                    moveCPiece ll=lmvcp;
+                    ll.BL_CSR=0;
+                    ll.BL_CSL=0;
+                    castle<CLR_ATT,CLR_P>(posk,21,depth,ll,-2,us_ks,th_ksr,th_ksb);
+                }else lmvcp.BL_CSL=0;
 
-			if(Table[28].PCE==ROOK && Table[28].STAT==2){
-			moveCPiece ll=lmvcp;
-			ll.BL_CSR=0;
-			ll.BL_CSL=0;
-			castle<CLR_ATT,CLR_P>(posk,28,depth,ll,2,us_ks,th_ksr,th_ksb);
-				}
-		}
-		}
-	}
-	}
+            }
+        }
+    }
+    if(lmvcp.BL_CSR){
+        if((all_pcs&(0x6ull<<56))==0){
+            //if(Table[posk+1].PCE==EMPTY && Table[posk+2].PCE==EMPTY){
+            if(kingSafety<CLR_ATT , CLR_P>(posk)!=KING_VAL && kingSafety<CLR_ATT , CLR_P>(posk+1)!=KING_VAL && kingSafety<CLR_ATT , CLR_P>(posk+2)!=KING_VAL ){
+
+                if(Table[28].PCE==ROOK && Table[28].STAT==2){
+                    moveCPiece ll=lmvcp;
+                    ll.BL_CSR=0;
+                    ll.BL_CSL=0;
+                    castle<CLR_ATT,CLR_P>(posk,28,depth,ll,2,us_ks,th_ksr,th_ksb);
+                }
+            }
+        }
+    }
+}
 	assert_eq_bts();
 assert_kings();
 //cout <<cnt<< ", ";
