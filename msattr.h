@@ -356,7 +356,7 @@ static char dbgt64[] = { "000000000000000000000000000000000000000000000000000000
 	template <int clr_a,int clr_p>
 	int kingSafety(u_int pos);
 	template <int CLR_P>
-	int king_ALL_Safety(u_int pos);
+        int king_ALL_Safety();
 	template <int CLR_ATT ,int CLR_P>
 	array<u_lol,2> kingBSafety(u_lol pos,u_lol mask);
 	template <int CLR_ATT ,int CLR_P>
@@ -380,7 +380,7 @@ static char dbgt64[] = { "000000000000000000000000000000000000000000000000000000
 	template <int CLR_P>
 	bool retBackPiece_L();
 	template <int CLR_ATT>
-	void moveTablePce_L(char PCE, char CHRG_POS, char TARG_POS);
+        void moveTablePce_L(unsigned char PCE,unsigned char CHRG_POS,unsigned char TARG_POS);
 	template <int CLR_P>
 	void popPieceFromArray_L( int TARG_POS);
 	bool makeMoveFromFile(gmoves & tmove);
